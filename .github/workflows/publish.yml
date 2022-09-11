@@ -74,9 +74,7 @@ jobs:
       matrix:
         build-env:
           - prod
-        builder-base-image-vsn:
-          - 1.14.0
-        runner-base-image-vsn:
+        base-image-vsn:
           - 1.14.0
     steps:
       - uses: actions/checkout@v3
@@ -101,10 +99,10 @@ jobs:
             BUILDER_REGISTRY=${{ env.BUILDER_BASE_IMAGE_REGISTRY }}
             BUILDER_REGISTRY_PATH=${{ env.BUILDER_BASE_IMAGE_REGISTRY_PATH }}
             BUILDER_BASE_IMAGE=${{ env.BUILDER_BASE_IMAGE }}
-            BUILDER_BASE_IMAGE_TAG=${{ matrix.builder-base-image-vsn }}-alpine
+            BUILDER_BASE_IMAGE_TAG=${{ matrix.base-image-vsn }}-alpine
             RUNNER_REGISTRY=${{ env.RUNNER_BASE_IMAGE_REGISTRY }}
             RUNNER_REGISTRY_PATH=${{ env.RUNNER_BASE_IMAGE_REGISTRY_PATH }}
             RUNNER_BASE_IMAGE=${{ env.RUNNER_BASE_IMAGE }}
-            RUNNER_BASE_IMAGE_TAG=${{ matrix.runner-base-image-vsn }}-alpine
+            RUNNER_BASE_IMAGE_TAG=${{ matrix.base-image-vsn }}-alpine
             MIX_ENV=${{ matrix.build-env }}
-            ELIXIR_VSN=${{ matrix.runner-base-image-vsn }}
+            ELIXIR_VSN=${{ matrix.base-image-vsn }}
