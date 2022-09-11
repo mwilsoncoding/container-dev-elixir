@@ -16,7 +16,10 @@
 
   "forwardPorts": [],
 
-  "postCreateCommand": "",
+  // Install local package manager caches if missing (see above note re: COPY . $APP_DIR)
+  // Get dependencies for the currently configured environment
+  "postCreateCommand": "mix do local.hex --force --if-missing, local.rebar --force --if-missing, deps.get --only $MIX_ENV",
+
 
   "remoteUser": "dev",
 
