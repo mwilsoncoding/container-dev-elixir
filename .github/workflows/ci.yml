@@ -39,11 +39,11 @@ jobs:
         with:
           # Cache deps, build, and package mgr dirs
           path: |
-          deps
-          _build
-          .hex
-          .mix
-          .cache
+            deps
+            _build
+            .hex
+            .mix
+            .cache
 
           # Cache based on OS, BUILD_ENV, LANG, LANG_VSN, and hashFiles('**/lang.lock')
           # The default branch should cache the same without the hash for a restore
