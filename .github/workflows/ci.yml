@@ -49,7 +49,7 @@ jobs:
           # The default branch should cache the same without the hash for a restore
           # from latest merge to the default branch
           key: |
-            ${{ matrix.build-env }}-${{ matrix.base-img-vsn }}-${{ hashFiles('**/Dockerfile') }}
+            ${{ matrix.build-env }}-${{ matrix.base-img-vsn }}-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
             ${{ matrix.build-env }}-${{ matrix.base-img-vsn }}
       - name: Build and Push the Docker image
