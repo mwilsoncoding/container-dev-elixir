@@ -57,7 +57,9 @@ jobs:
             --build-arg REGISTRY=${{ env.BASE_IMG_REGISTRY }} \
             --build-arg REGISTRY_PATH=${{ env.BASE_IMG_REGISTRY_PATH }} \
             --build-arg BASE_IMAGE=${{ env.BASE_IMG }} \
-            --build-arg BASE_IMAGE_TAG=${{ matrix.base-img-vsn }}-alpine
+            --build-arg BASE_IMAGE_TAG=${{ matrix.base-img-vsn }}-alpine \
+            --build-arg MIX_ENV=${{ matrix.build-env }} \
+            --build-arg ELIXIR_VERSION=${{ matrix.base-img-vsn }}
           docker container create --name cache ghcr.io/${{ github.repository }}/container-dev-builder:${{ matrix.build-env }}-${{ matrix.base-img-vsn }}-${{ github.sha }}
           docker container cp cache:/opt/app/deps .
           docker container cp cache:/opt/app/_build .
