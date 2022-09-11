@@ -1,23 +1,31 @@
 # Select a base image for developing your language
 # Alpine images are preferred
-#
-# Elixir examples provided:
-#
-#   ARG BASE_IMAGE=elixir
-#   ARG ELIXIR_VERSION=elixir
-#   ARG BASE_IMAGE_TAG=${ELIXIR_VERSION}-alpine
 ARG REGISTRY=docker.io
 ARG REGISTRY_PATH=library
-ARG BASE_IMAGE=alpine
-ARG BASE_IMAGE_TAG=3.16.2
+ARG BASE_IMAGE=elixir
+ARG ELIXIR_VERSION=1.14.0
+ARG BASE_IMAGE_TAG=${ELIXIR_VERSION}-alpine
 FROM ${REGISTRY}/${REGISTRY_PATH}/${BASE_IMAGE}:${BASE_IMAGE_TAG}
 
 RUN apk add --no-cache bash git sudo
 
-# Add any additional desired development tooling. Eg:
-# 
+# Add any additional desired development tooling.
+# YAML
 RUN apk add --no-cache py3-pip yamllint
 RUN pip install yamlfix
+# Elixir
+RUN apk add --no-cache bash make gcc libc-dev git sudo
+
+# Set environment variables for any paths that language-specific
+# tooling may need for interacting with the host filesystem
+# $WORKSPACE is set in devcontainer.json
+ENV WORKSPACE /workspace
+ENV MIX_HOME $WORKSPACE/.mix
+ENV HEX_HOME $WORKSPACE/.hex
+ENV REBAR_CACHE_DIR $WORKSPACE/.cache
+
+# Set an ENV to persist the app build env as development mode
+ENV MIX_ENV dev
 
 # This Dockerfile adds a non-root user with sudo access. Use the "remoteUser"
 # property in devcontainer.json to use it. On Linux, the container user's GID/UIDs
@@ -34,20 +42,3 @@ RUN addgroup -g $USER_GID $USERNAME \
 
 USER $USERNAME
 ENV HOME /home/$USERNAME
-
-# Set environment variables for any paths that language-specific
-# tooling may need for interacting with the host filesystem
-#
-#   ENV MIX_HOME $WORKSPACE/.mix
-#   ENV HEX_HOME $WORKSPACE/.hex
-#   ENV REBAR_CACHE_DIR $WORKSPACE/.cache
-# 
-# Set an ENV to persist the app build env as development mode
-#   ENV MIX_ENV dev
-#
-# Install local package manager caches if missing (see above note re: COPY . $APP_DIR)
-# Get dependencies for the currently configured environment
-#
-#   RUN mix do local.hex --force --if-missing, \
-#       local.rebar --force --if-missing, \
-#       deps.get --only $MIX_ENV

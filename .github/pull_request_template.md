@@ -12,8 +12,8 @@ Please describe the tests that you ran to verify your changes. Provide instructi
 - [ ] Test B
 
 **Test Configuration**:
-* `ENV`:
-* `FOO`:
+* `MIX_ENV`:
+* `ELIXIR_VERSION`:
 
 # Checklist:
 

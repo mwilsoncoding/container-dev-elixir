@@ -1,24 +1,19 @@
-# container-dev
+# container-dev-elixir
 
-An opinionated, language-agnostic, starting point for containerized development.
-
-This is a repo from which similarly-opinionated, language-specific, template repos are derived.
-
-Language-specific derivations of this repo:
+An opinionated starting point for containerized development in Elixir.
 
 ## How to Use
 
 - Follow [the official instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template) on creating a new repo from a template.
-- Create a new project in the new repo's root directory and modify the template as needed
-
-### CLI
+- Modify new repository settings accordingly
 
 ```console
-gh repo create $MY_NEW_REPO $MY_NEW_REPO_ACCESS_LEVEL --template mwilsoncoding/container-dev
+# After creating $MY_NEW_REPO from this template
+git clone $MY_NEW_REPO
 ```
 ```console
 cd $MY_NEW_REPO
 ```
 ```console
-# Create your project and modify the extant template files as needed
+docker run --rm -it -v $(pwd):/workspace -w /workspace -e OTP_APP=my_app -e MODULE=MyApp alpine:latest sed -i -e "s/ElixirDev/${MODULE}/g" lib/elixir_dev.ex test/elixir_dev_test.exs mix.exs && mv ./lib/elixir_dev.ex ./lib/${OTP_APP}.ex && mv ./test/elixir_dev_test.exs ./test/${OTP_APP}_test.exs
 ```
