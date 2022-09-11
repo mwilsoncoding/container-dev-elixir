@@ -27,6 +27,20 @@
 	"editorconfig.editorconfig",
 	"github.vscode-pull-request-github",
 	"redhat.vscode-yaml",
-	"ms-azuretools.vscode-docker"
-  ]
+	"ms-azuretools.vscode-docker",
+  "jakebecker.elixir-ls"
+  ],
+
+  // Configure tool-specific properties.
+  "customizations": {
+    // Configure properties specific to VS Code.
+    "vscode": {
+      "settings": {
+        "elixirLS.envVariables": {
+          "ELIXIR_VSN": "1.14.0"
+        }
+      }
+    }
+  }
+
 }

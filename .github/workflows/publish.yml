@@ -61,7 +61,7 @@ jobs:
             --build-arg BUILDER_BASE_IMAGE=${{ env.BUILDER_BASE_IMAGE }} \
             --build-arg BUILDER_BASE_IMAGE_TAG=${{ matrix.builder-base-image-vsn }}-alpine \
             --build-arg MIX_ENV=${{ matrix.build-env }} \
-            --build-arg ELIXIR_VERSION=${{ matrix.builder-base-image-vsn }}
+            --build-arg ELIXIR_VSN=${{ matrix.builder-base-image-vsn }}
           docker container create --name cache ghcr.io/${{ github.repository }}/container-dev-builder:${{ matrix.build-env }}-${{ matrix.builder-base-image-vsn }}-${{ github.sha }}
           docker container cp cache:/opt/app/deps .
           docker container cp cache:/opt/app/_build .
@@ -107,4 +107,4 @@ jobs:
             RUNNER_BASE_IMAGE=${{ env.RUNNER_BASE_IMAGE }}
             RUNNER_BASE_IMAGE_TAG=${{ matrix.runner-base-image-vsn }}-alpine
             MIX_ENV=${{ matrix.build-env }}
-            ELIXIR_VERSION=${{ matrix.runner-base-image-vsn }}
+            ELIXIR_VSN=${{ matrix.runner-base-image-vsn }}
