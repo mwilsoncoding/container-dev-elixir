@@ -1,11 +1,15 @@
-# Set args for image overrides
-ARG REGISTRY=docker.io
-ARG REGISTRY_PATH=library
-ARG BASE_IMAGE=elixir
-
 # Set language-specific versioning
-ARG ELIXIR_VERSION=1.14.0
-ARG BASE_IMAGE_TAG=${ELIXIR_VERSION}-alpine
+ARG ELIXIR_VSN=1.14.0
+
+# Set args for image overrides
+ARG BUILDER_REGISTRY=docker.io
+ARG BUILDER_REGISTRY_PATH=library
+ARG BUILDER_BASE_IMAGE=elixir
+ARG BUILDER_BASE_IMAGE_TAG=${ELIXIR_VSN}-alpine
+ARG RUNNER_REGISTRY=$BUILDER_REGISTRY
+ARG RUNNER_REGISTRY_PATH=$BUILDER_REGISTRY_PATH
+ARG RUNNER_BASE_IMAGE=$BUILDER_BASE_IMAGE
+ARG RUNNER_BASE_IMAGE_TAG=$BUILDER_BASE_IMAGE_TAG
 
 # Set a base directory ARG for running the build of your app
 ARG APP_DIR=/opt/app
@@ -14,22 +18,22 @@ ARG APP_DIR=/opt/app
 ARG MIX_ENV=prod
 
 # Set any other args shared between build stages
-ARG OTP_APP=my_app
+ARG OTP_APP=elixir_dev
 
 # Build stage
-FROM ${REGISTRY}/${REGISTRY_PATH}/${BASE_IMAGE}:${BASE_IMAGE_TAG} AS builder
+FROM ${BUILDER_REGISTRY}/${BUILDER_REGISTRY_PATH}/${BUILDER_BASE_IMAGE}:${BUILDER_BASE_IMAGE_TAG} AS builder
 
 # Import necessary ARGs defined at top level
 ARG APP_DIR
 ARG MIX_ENV
-ARG ELIXIR_VERSION
+ARG ELIXIR_VSN
 
 # Persist necessary ARGs as ENVs for use in CI
-ENV ELIXIR_VERSION $ELIXIR_VERSION
 ENV MIX_ENV $MIX_ENV
 ENV MIX_HOME $APP_DIR/.mix
 ENV HEX_HOME $APP_DIR/.hex
 ENV REBAR_CACHE_DIR $APP_DIR/.cache
+ENV ELIXIR_VSN $ELIXIR_VSN
 
 # Copy all src. Leverage .dockerignore to exclude unnecessary files.
 # This will copy any host directories used for local dependency
@@ -60,26 +64,22 @@ RUN if [ "$MIX_ENV" == "test" ]; then mix dialyzer --plt; fi
 
 # Runner stage
 # Using the same image as the builder assures compatibility between [build|run]time
-FROM ${REGISTRY}/${REGISTRY_PATH}/${BASE_IMAGE}:${BASE_IMAGE_TAG}
+FROM ${RUNNER_REGISTRY}/${RUNNER_REGISTRY_PATH}/${RUNNER_BASE_IMAGE}:${RUNNER_BASE_IMAGE_TAG}
 
 # Import necessary ARGs defined at top level
 ARG APP_DIR
-ARG MIX_ENV
 ARG OTP_APP
-ENV OTP_APP $OTP_APP
+ARG MIX_ENV
 
 # Copy from the built directory into the runner stage at the same directory
 ARG BUILD_DIR=$APP_DIR/_build
 WORKDIR $BUILD_DIR
 COPY --from=builder $BUILD_DIR .
 
-# Preserve the build environment in an ENV if necessary
+# Preserve the deploy environment in an ENV if necessary
 ENV MIX_ENV $MIX_ENV
 
-# Set a running directory
-ARG RUN_DIR=$BUILD_DIR/$MIX_ENV/rel/$OTP_APP/bin
-WORKDIR $RUN_DIR
-WORKDIR $APP_DIR
+WORKDIR $BUILD_DIR/$MIX_ENV/rel/$OTP_APP/bin
 
 # Use CMD to allow overrides when invoked via `docker container run`
-CMD ["./$OTP_APP","start"]
+CMD ["./elixir_dev","start"]

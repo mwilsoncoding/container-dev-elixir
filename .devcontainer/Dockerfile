@@ -1,11 +1,11 @@
 # Select a base image for developing your language
 # Alpine images are preferred
-ARG REGISTRY=docker.io
-ARG REGISTRY_PATH=library
-ARG BASE_IMAGE=elixir
-ARG ELIXIR_VERSION=1.14.0
-ARG BASE_IMAGE_TAG=${ELIXIR_VERSION}-alpine
-FROM ${REGISTRY}/${REGISTRY_PATH}/${BASE_IMAGE}:${BASE_IMAGE_TAG}
+ARG ELIXIR_VSN=1.14.0
+ARG BUILDER_REGISTRY=docker.io
+ARG BUILDER_REGISTRY_PATH=library
+ARG BUILDER_BASE_IMAGE=elixir
+ARG BUILDER_BASE_IMAGE_TAG=${ELIXIR_VSN}-alpine
+FROM ${BUILDER_REGISTRY}/${BUILDER_REGISTRY_PATH}/${BUILDER_BASE_IMAGE}:${BUILDER_BASE_IMAGE_TAG}
 
 RUN apk add --no-cache bash git sudo
 
@@ -26,6 +26,7 @@ ENV REBAR_CACHE_DIR $WORKSPACE/.cache
 
 # Set an ENV to persist the app build env as development mode
 ENV MIX_ENV dev
+ENV ELIXIR_VSN $ELIXIR_VSN
 
 # This Dockerfile adds a non-root user with sudo access. Use the "remoteUser"
 # property in devcontainer.json to use it. On Linux, the container user's GID/UIDs
