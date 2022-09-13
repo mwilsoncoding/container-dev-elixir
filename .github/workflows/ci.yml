@@ -4,12 +4,12 @@ on:
   pull_request:
     branches: [main]
 env:
-  BUILDER_BASE_IMG: elixir
-  BUILDER_BASE_IMG_REGISTRY: docker.io
-  BUILDER_BASE_IMG_REGISTRY_PATH: library
+  BUILDER_BASE_IMAGE: elixir
+  BUILDER_BASE_IMAGE_REGISTRY: docker.io
+  BUILDER_BASE_IMAGE_REGISTRY_PATH: library
   # Google Artifact Registry Example:
-  # BUILDER_BASE_IMG_REGISTRY: us-docker.pkg.dev
-  # BUILDER_BASE_IMG_REGISTRY_PATH: $PROJECT_ID/$PATH
+  # BUILDER_BASE_IMAGE_REGISTRY: us-docker.pkg.dev
+  # BUILDER_BASE_IMAGE_REGISTRY_PATH: $PROJECT_ID/$PATH
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -61,10 +61,10 @@ jobs:
           context: .
           target: builder
           build-args: |
-            BUILDER_REGISTRY=${{ env.BUILDER_BASE_IMG_REGISTRY }}
-            BUILDER_REGISTRY_PATH=${{ env.BUILDER_BASE_IMG_REGISTRY_PATH }}
-            BUILDER_BASE_IMG=${{ env.BUILDER_BASE_IMG }}
-            BUILDER_BASE_IMG_TAG=${{ matrix.builder-base-image-vsn }}-alpine
+            BUILDER_REGISTRY=${{ env.BUILDER_BASE_IMAGE_REGISTRY }}
+            BUILDER_REGISTRY_PATH=${{ env.BUILDER_BASE_IMAGE_REGISTRY_PATH }}
+            BUILDER_BASE_IMAGE=${{ env.BUILDER_BASE_IMAGE }}
+            BUILDER_BASE_IMAGE_TAG=${{ matrix.builder-base-image-vsn }}-alpine
             MIX_ENV=${{ matrix.build-env }}
             ELIXIR_VERSION=${{ matrix.builder-base-image-vsn }}
       - name: Copy Docker Contents to Host
