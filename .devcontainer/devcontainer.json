@@ -1,9 +1,5 @@
 {
   "name": "Dev",
-  //"build":{
-  //  "dockerfile": "Dockerfile",
-  //  "context": ".."
-  //},
 
   "dockerComposeFile": "docker-compose.yaml",
   "service": "dev",
@@ -14,11 +10,17 @@
     "terminal.integrated.defaultProfile.linux": "bash"
   },
 
-  "forwardPorts": [],
+  "forwardPorts": [
+    // In CodeSpaces, this will enable a link to the specified HTTP service
+    // which will open in a new tab in your browser. Be sure to label the
+    // port with the name of the service as defined in the docker-compose.yaml
+    // E.g.
+    // "rabbitmq:15672"
+  ],
 
   // Install local package manager caches if missing (see above note re: COPY . $APP_DIR)
   // Get dependencies for the currently configured environment
-  "postCreateCommand": "mix do local.hex --force --if-missing, local.rebar --force --if-missing, deps.get --only $MIX_ENV",
+  "postCreateCommand": "mix do local.hex --force --if-missing, local.rebar --force --if-missing, deps.get --only $MIX_ENV, deps.update --all",
 
 
   "remoteUser": "dev",
@@ -37,7 +39,7 @@
     "vscode": {
       "settings": {
         "elixirLS.envVariables": {
-          "ELIXIR_VSN": "1.14.0"
+          "ELIXIR_VSN": "1.14.1"
         }
       }
     }

@@ -1,6 +1,7 @@
 ---
 services:
   dev:
+    container_name: "dev"
     volumes:
       - ..:/workspace:cached
     command: /bin/bash
@@ -9,3 +10,36 @@ services:
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile
+  #   # If you require services to be available for development, depend on them here
+  #   depends_on:
+  #     - pg
+  #     - rabbitmq
+  #
+  # # If you require services to be available for development, declare them here
+  # pg:
+  #   container_name: "pg"
+  #   environment:
+  #     - POSTGRES_PASSWORD=pg
+  #     - POSTGRES_USER=my_app
+  #     - POSTGRES_DB=my_app
+  #     - PGDATA=/var/lib/postgresql/data/pgdata
+  #   volumes:
+  #     - ../pgdata:/var/lib/postgresql/data/
+  #   image: "postgres:15-alpine"
+  #   restart: unless-stopped
+  #   ports:
+  #     # Postgres
+  #     - '5432:5432'
+  # rabbitmq:
+  #   container_name: "rabbitmq"
+  #   image: rabbitmq:3-management-alpine
+  #   environment:
+  #     - RABBITMQ_DEFAULT_USER=rmq
+  #     - RABBITMQ_DEFAULT_PASS=rmq
+  #   volumes:
+  #     - ../rabbitmq:/var/lib/rabbitmq/
+  #   ports:
+  #     # AMQP protocol port
+  #     - '5672:5672'
+  #     # HTTP management UI
+  #     - '15672:15672'

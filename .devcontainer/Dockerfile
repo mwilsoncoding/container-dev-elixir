@@ -1,6 +1,6 @@
 # Select a base image for developing your language
 # Alpine images are preferred
-ARG ELIXIR_VSN=1.14.0
+ARG ELIXIR_VSN=1.14.1
 ARG BUILDER_REGISTRY=docker.io
 ARG BUILDER_REGISTRY_PATH=library
 ARG BUILDER_BASE_IMAGE=elixir
@@ -10,8 +10,8 @@ FROM ${BUILDER_REGISTRY}/${BUILDER_REGISTRY_PATH}/${BUILDER_BASE_IMAGE}:${BUILDE
 RUN apk add --no-cache bash git sudo
 
 # Add any additional desired development tooling.
-# YAML
-RUN apk add --no-cache py3-pip yamllint
+# YAML, Postgres
+RUN apk add --no-cache py3-pip yamllint postgresql-client
 RUN pip install yamlfix
 # Elixir
 RUN apk add --no-cache bash make gcc libc-dev git sudo
@@ -26,7 +26,6 @@ ENV REBAR_CACHE_DIR $WORKSPACE/.cache
 
 # Set an ENV to persist the app build env as development mode
 ENV MIX_ENV dev
-ENV ELIXIR_VSN $ELIXIR_VSN
 
 # This Dockerfile adds a non-root user with sudo access. Use the "remoteUser"
 # property in devcontainer.json to use it. On Linux, the container user's GID/UIDs

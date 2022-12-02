@@ -1,5 +1,5 @@
 # Set language-specific versioning
-ARG ELIXIR_VSN=1.14.0
+ARG ELIXIR_VSN=1.14.1
 
 # Set args for image overrides
 ARG BUILDER_REGISTRY=docker.io
@@ -41,7 +41,7 @@ ENV ELIXIR_VSN $ELIXIR_VSN
 COPY . $APP_DIR
 
 # Install OS build/test dependencies
-RUN apk add --no-cache yamllint
+RUN apk add --no-cache yamllint git
 
 WORKDIR $APP_DIR
 
@@ -74,12 +74,11 @@ ARG MIX_ENV
 # Copy from the built directory into the runner stage at the same directory
 ARG BUILD_DIR=$APP_DIR/_build
 WORKDIR $BUILD_DIR
-COPY --from=builder $BUILD_DIR .
+COPY --from=builder $BUILD_DIR/$MIX_ENV/rel/$OTP_APP .
+COPY --from=builder /opt/app/priv/repo/seeds .
 
 # Preserve the deploy environment in an ENV if necessary
 ENV MIX_ENV $MIX_ENV
 
-WORKDIR $BUILD_DIR/$MIX_ENV/rel/$OTP_APP/bin
-
 # Use CMD to allow overrides when invoked via `docker container run`
-CMD ["./elixir_dev","start"]
+CMD [ "./bin/server" ]
