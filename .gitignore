@@ -10,10 +10,16 @@ erl_crash.dump
 /config/*.secret.exs
 elixir_dev-*.tar
 
+# Ignore any local kubernetes secrets
+secret.yaml
+
 # Ignore anything VSCode populates for plugins
 .elixir_ls/
 
-# Ignore  or package manager cache directories
+# Ignore cache directories
+# pgdata
+# rabbitmq
 /.mix
 /.hex
 /.cach
+charts

@@ -20,7 +20,7 @@ jobs:
           - test
           - prod
         builder-base-image-vsn:
-          - 1.14.0
+          - 1.14.1
     steps:
       - uses: actions/checkout@v3
       - name: Set up Docker Buildx
@@ -75,7 +75,7 @@ jobs:
         build-env:
           - prod
         base-image-vsn:
-          - 1.14.0
+          - 1.14.1
     steps:
       - uses: actions/checkout@v3
       - name: Set up Docker Buildx
@@ -93,7 +93,9 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: ghcr.io/${{ github.repository }}/container:${{ github.sha }}
+          tags: |
+            ghcr.io/${{ github.repository }}/container-dev:latest
+            ghcr.io/${{ github.repository }}/container-dev:${{ github.sha }}
           context: .
           build-args: |-
             BUILDER_REGISTRY=${{ env.BUILDER_BASE_IMAGE_REGISTRY }}

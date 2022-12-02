@@ -3,3 +3,8 @@ README.md
 SECURITY.md
 .devcontainer
 .github
+helm
+
+# Ignore service dependency data dirs
+# pgdata
+# rabbitmq

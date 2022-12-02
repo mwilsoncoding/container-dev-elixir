@@ -20,7 +20,7 @@ jobs:
           - test
           - prod
         builder-base-image-vsn:
-          - 1.14.0
+          - 1.14.1
     steps:
       - uses: actions/checkout@v3
       - name: Set up Docker Buildx
@@ -66,7 +66,7 @@ jobs:
             BUILDER_BASE_IMAGE=${{ env.BUILDER_BASE_IMAGE }}
             BUILDER_BASE_IMAGE_TAG=${{ matrix.builder-base-image-vsn }}-alpine
             MIX_ENV=${{ matrix.build-env }}
-            ELIXIR_VERSION=${{ matrix.builder-base-image-vsn }}
+            ELIXIR_VSN=${{ matrix.builder-base-image-vsn }}
       - name: Copy Docker Contents to Host
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
@@ -81,9 +81,9 @@ jobs:
     strategy:
       matrix:
         build-env:
-          - dev
+          - test
         builder-base-image-vsn:
-          - 1.14.0
+          - 1.14.1
     steps:
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
@@ -99,9 +99,9 @@ jobs:
     strategy:
       matrix:
         build-env:
-          - dev
+          - test
         builder-base-image-vsn:
-          - 1.14.0
+          - 1.14.1
     steps:
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
@@ -119,7 +119,7 @@ jobs:
         build-env:
           - test
         builder-base-image-vsn:
-          - 1.14.0
+          - 1.14.1
     steps:
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
@@ -135,9 +135,9 @@ jobs:
     strategy:
       matrix:
         build-env:
-          - dev
+          - test
         builder-base-image-vsn:
-          - 1.14.0
+          - 1.14.1
     steps:
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
@@ -148,14 +148,29 @@ jobs:
       - run: |-
           docker container run ghcr.io/${{ github.repository }}/container-dev-builder:${{ matrix.build-env }}-${{ matrix.builder-base-image-vsn }}-${{ github.sha }} mix credo
   unit-test:
+    # If your tests require service dependencies, define them here. They will be accessible at `localhost` in the testing environment.
+    # services:
+    #   postgres:
+    #     image: postgres:15-alpine
+    #     env:
+    #       POSTGRES_PASSWORD: pg
+    #       POSTGRES_USER: my_app
+    #       POSTGRES_DB: my_app
+    #     options: >-
+    #       --health-cmd pg_isready
+    #       --health-interval 10s
+    #       --health-timeout 5s
+    #       --health-retries 5
+    #     ports:
+    #       - 5432:5432
     runs-on: ubuntu-latest
     needs: build
     strategy:
       matrix:
         build-env:
-          - dev
+          - test
         builder-base-image-vsn:
-          - 1.14.0
+          - 1.14.1
     steps:
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
@@ -165,3 +180,21 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - run: |-
           docker container run ghcr.io/${{ github.repository }}/container-dev-builder:${{ matrix.build-env }}-${{ matrix.builder-base-image-vsn }}-${{ github.sha }} mix test
+  audit:
+    runs-on: ubuntu-latest
+    needs: build
+    strategy:
+      matrix:
+        build-env:
+          - test
+        builder-base-image-vsn:
+          - 1.14.1
+    steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - run: |-
+          docker container run ghcr.io/${{ github.repository }}/container-dev-builder:${{ matrix.build-env }}-${{ matrix.builder-base-image-vsn }}-${{ github.sha }} mix deps.audit
