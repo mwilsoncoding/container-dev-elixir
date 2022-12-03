@@ -2,7 +2,7 @@ image:
   registry: ghcr.io
   repository: mwilsoncoding/container-dev-elixir/container-dev
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 # postgresql:
 #   enabled: true
 #   image:
