@@ -69,7 +69,7 @@ spec:
             #       name: elixir-dev
             #       key: db-password
             # - name: DB_HOST
-            #   value: {{ include "postgresql.hostname" . }}
+            #   value: {{/* include "postgresql.hostname" . */}}
             # - name: DATABASE_URL
             #   value: "ecto://$(DB_USER):$(DB_PASS)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)"
           envFrom:
@@ -111,7 +111,7 @@ spec:
             #       name: elixir-dev
             #       key: db-password
             # - name: DB_HOST
-            #   value: {{ include "postgresql.hostname" . }}
+            #   value: {{/* include "postgresql.hostname" . */}}
             # - name: DATABASE_URL
             #   value: "ecto://$(DB_USER):$(DB_PASS)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)"
           envFrom:
