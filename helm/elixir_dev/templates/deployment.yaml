@@ -1,0 +1,150 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "elixir_dev.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app.kubernetes.io/name: elixir_dev
+    app.kubernetes.io/instance: elixir_dev
+spec:
+  replicas: 3
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: elixir_dev
+      app.kubernetes.io/instance: elixir_dev
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: elixir_dev
+        app.kubernetes.io/instance: elixir_dev
+    spec:
+      hostNetwork: false
+      serviceAccountName: elixir_dev
+      securityContext:
+        fsGroup: 1000
+      volumes:
+        - name: tmp
+          emptyDir: {}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app.kubernetes.io/instance
+                      operator: In
+                      values:
+                        - elixir_dev
+                topologyKey: topology.kubernetes.io/zone
+      initContainers:
+        - name: elixir_dev-ecto-migration
+          image: {{ template "elixir_dev.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          command: ["/opt/app/_build/bin/migrate"]
+          env:
+            # - name: DB_NAME
+            #   value: "elixir_dev"
+            # - name: DB_USER
+            #   value: "elixir_dev"
+            # - name: DB_PORT
+            #   value: "5432"
+            # - name: DB_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: elixir_dev
+            #       key: db-password
+            # - name: DB_HOST
+            #   value: {{ include "postgresql.hostname" . }}
+            # - name: DATABASE_URL
+            #   value: "ecto://$(DB_USER):$(DB_PASS)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)"
+          envFrom:
+            - configMapRef:
+                name: elixir_dev
+            - secretRef:
+                name: elixir_dev
+          resources:
+            limits:
+              cpu: 1
+              memory: 2Gi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+      containers:
+        - name: elixir_dev
+          image: {{ template "elixir_dev.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          env:
+            # - name: DB_NAME
+            #   value: "elixir_dev"
+            # - name: DB_USER
+            #   value: "elixir_dev"
+            # - name: DB_PORT
+            #   value: "5432"
+            # - name: DB_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: elixir_dev
+            #       key: db-password
+            # - name: DB_HOST
+            #   value: {{ include "postgresql.hostname" . }}
+            # - name: DATABASE_URL
+            #   value: "ecto://$(DB_USER):$(DB_PASS)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)"
+          envFrom:
+            - configMapRef:
+                name: elixir_dev
+            - secretRef:
+                name: elixir_dev
+          ports:
+            - name: probe
+              containerPort: 9090
+          livenessProbe:
+            httpGet:
+              path: /liveness
+              port: probe
+            timeoutSeconds: 3
+            failureThreshold: 6
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: probe
+            timeoutSeconds: 3
+            periodSeconds: 5
+          startupProbe:
+            httpGet:
+              path: /liveness
+              port: probe
+            periodSeconds: 1
+            timeoutSeconds: 5
+            failureThreshold: 60
+          resources:
+            limits:
+              cpu: 1
+              memory: 2Gi
+            requests:
+              cpu: 100m
+              memory: 128Mi

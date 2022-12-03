@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "elixir_dev.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app.kubernetes.io/name: elixir_dev
+    app.kubernetes.io/instance: elixir_dev
+data:
+  RELEASE_NAME: "elixir_dev"
+  RELEASE_TMP: "/tmp"
+  PROBE_PORT: "9090"
+#   RABBITMQ_HOST: {{ include "rabbitmq.hostname" . }}
