@@ -11,4 +11,4 @@ data:
   RELEASE_NAME: "elixir-dev"
   RELEASE_TMP: "/tmp"
   PROBE_PORT: "9090"
-#   RABBITMQ_HOST: {{ include "rabbitmq.hostname" . }}
+#   RABBITMQ_HOST: {{/* include "rabbitmq.hostname" . */}}
