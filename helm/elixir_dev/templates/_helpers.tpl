@@ -31,7 +31,7 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{- define "elixir-dev.image" -}}
-{{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global) }}
+{{- printf "%s/%s:%s" .Values.image.registry .Values.image.repository .Values.image.tag -}}
 {{- end -}}
 
 {{/*
