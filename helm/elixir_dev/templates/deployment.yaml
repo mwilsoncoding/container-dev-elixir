@@ -41,49 +41,49 @@ spec:
                       values:
                         - elixir-dev
                 topologyKey: topology.kubernetes.io/zone
-      initContainers:
-        - name: elixir-dev-ecto-migration
-          image: {{ template "elixir-dev.image" . }}
-          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
-          securityContext:
-            capabilities:
-              drop:
-                - ALL
-            readOnlyRootFilesystem: true
-            runAsNonRoot: true
-            runAsUser: 1000
-          volumeMounts:
-            - name: tmp
-              mountPath: /tmp
-          command: ["/opt/app/_build/bin/migrate"]
-          env:
-            # - name: DB_NAME
-            #   value: "elixir_dev"
-            # - name: DB_USER
-            #   value: "elixir_dev"
-            # - name: DB_PORT
-            #   value: "5432"
-            # - name: DB_PASSWORD
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: elixir-dev
-            #       key: db-password
-            # - name: DB_HOST
-            #   value: {{/* include "postgresql.hostname" . */}}
-            # - name: DATABASE_URL
-            #   value: "ecto://$(DB_USER):$(DB_PASS)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)"
-          envFrom:
-            - configMapRef:
-                name: elixir-dev
-            - secretRef:
-                name: elixir-dev
-          resources:
-            limits:
-              cpu: 1
-              memory: 2Gi
-            requests:
-              cpu: 100m
-              memory: 128Mi
+      # initContainers:
+      #   - name: elixir-dev-ecto-migration
+      #     image: {{ template "elixir-dev.image" . }}
+      #     imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+      #     securityContext:
+      #       capabilities:
+      #         drop:
+      #           - ALL
+      #       readOnlyRootFilesystem: true
+      #       runAsNonRoot: true
+      #       runAsUser: 1000
+      #     volumeMounts:
+      #       - name: tmp
+      #         mountPath: /tmp
+      #     command: ["/opt/app/_build/bin/migrate"]
+      #     env:
+      #       - name: DB_NAME
+      #         value: "elixir_dev"
+      #       - name: DB_USER
+      #         value: "elixir_dev"
+      #       - name: DB_PORT
+      #         value: "5432"
+      #       - name: DB_PASSWORD
+      #         valueFrom:
+      #           secretKeyRef:
+      #             name: elixir-dev
+      #             key: db-password
+      #       - name: DB_HOST
+      #         value: {{/* include "postgresql.hostname" . */}}
+      #       - name: DATABASE_URL
+      #         value: "ecto://$(DB_USER):$(DB_PASS)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)"
+      #     envFrom:
+      #       - configMapRef:
+      #           name: elixir-dev
+      #       - secretRef:
+      #           name: elixir-dev
+      #     resources:
+      #       limits:
+      #         cpu: 1
+      #         memory: 2Gi
+      #       requests:
+      #         cpu: 100m
+      #         memory: 128Mi
       containers:
         - name: elixir-dev
           image: {{ template "elixir-dev.image" . }}
