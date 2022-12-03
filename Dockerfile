@@ -75,7 +75,7 @@ ARG MIX_ENV
 ARG BUILD_DIR=$APP_DIR/_build
 WORKDIR $BUILD_DIR
 COPY --from=builder $BUILD_DIR/$MIX_ENV/rel/$OTP_APP .
-COPY --from=builder /opt/app/priv/repo/seeds .
+COPY --from=builder /opt/app/priv/repo/seeds ./seeds
 
 # Preserve the deploy environment in an ENV if necessary
 ENV MIX_ENV $MIX_ENV
