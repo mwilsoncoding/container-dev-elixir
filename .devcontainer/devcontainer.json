@@ -30,8 +30,9 @@
 	"github.vscode-pull-request-github",
 	"redhat.vscode-yaml",
 	"ms-azuretools.vscode-docker",
-  "jakebecker.elixir-ls"
-  ],
+	"jakebecker.elixir-ls",
+  "ms-kubernetes-tools.vscode-kubernetes-tools"
+],
 
   // Configure tool-specific properties.
   "customizations": {
