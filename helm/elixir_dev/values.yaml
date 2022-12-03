@@ -10,7 +10,7 @@ image:
 #   auth:
 #     username: elixir_dev
 #     database: elixir_dev
-#     existingSecret: elixir_dev
+#     existingSecret: elixir-dev
 #   architecture: standalone
 #   primary:
 #     name: primary
@@ -40,7 +40,7 @@ image:
 #     tag: 3.11
 #   replicaCount: 1
 #   auth:
-#     existingPasswordSecret: elixir_dev
+#     existingPasswordSecret: elixir-dev
 #   memoryHighWatermark:
 #     enabled: true
 #     type: relative
