@@ -1,6 +1,6 @@
 # Select a base image for developing your language
 # Alpine images are preferred
-ARG ELIXIR_VSN=1.14.1
+ARG ELIXIR_VSN=1.14.2
 ARG BUILDER_REGISTRY=docker.io
 ARG BUILDER_REGISTRY_PATH=library
 ARG BUILDER_BASE_IMAGE=elixir
@@ -22,7 +22,7 @@ RUN apk add --no-cache bash make gcc libc-dev git sudo
 ENV WORKSPACE /workspace
 ENV MIX_HOME $WORKSPACE/.mix
 ENV HEX_HOME $WORKSPACE/.hex
-ENV REBAR_CACHE_DIR $WORKSPACE/.cache
+ENV REBAR_CACHE_DIR $WORKSPACE/.rebar_cache
 
 # Set an ENV to persist the app build env as development mode
 ENV MIX_ENV dev
@@ -31,7 +31,7 @@ ENV MIX_ENV dev
 # property in devcontainer.json to use it. On Linux, the container user's GID/UIDs
 # will be updated to match your local UID/GID (when using the dockerFile property).
 # See https://aka.ms/vscode-remote/containers/non-root-user for details.
-ARG USERNAME=dev
+ARG USERNAME=vscode
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
