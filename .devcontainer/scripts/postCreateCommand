@@ -18,7 +18,8 @@ set -euo pipefail
 IFS=$'\n\t'
 mix do format --check-formatted, \
        credo, \
-       deps.audit
+       deps.audit, \
+       test
 EOF
   chmod +x .git/hooks/pre-commit
 fi
