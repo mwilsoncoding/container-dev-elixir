@@ -7,7 +7,7 @@ ARG BUILDER_BASE_IMAGE=elixir
 ARG BUILDER_BASE_IMAGE_TAG=${ELIXIR_VSN}-alpine
 FROM ${BUILDER_REGISTRY}/${BUILDER_REGISTRY_PATH}/${BUILDER_BASE_IMAGE}:${BUILDER_BASE_IMAGE_TAG}
 
-RUN apk add --no-cache bash git sudo
+RUN apk add --no-cache bash git sudo gpg
 
 # Add any additional desired development tooling.
 # YAML, Postgres
