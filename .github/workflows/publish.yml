@@ -20,7 +20,7 @@ jobs:
           - test
           - prod
         builder-base-image-vsn:
-          - 1.14.1
+          - 1.14.2
     steps:
       - uses: actions/checkout@v3
       - name: Set up Docker Buildx
@@ -44,7 +44,7 @@ jobs:
             _build
             .hex
             .mix
-            .cache
+            .rebar_cache
 
           # Cache based on OS, BUILD_ENV, LANG, LANG_VSN, and hashFiles('**/lang.lock')
           # The default branch should cache the same without the hash for a restore
@@ -55,12 +55,13 @@ jobs:
         run: |
           docker build . \
             --tag ghcr.io/${{ github.repository }}/container-dev-builder:${{ matrix.build-env }}-${{ matrix.builder-base-image-vsn }}-${{ github.sha }} \
-            --target builder \
+            --target plts \
             --build-arg BUILDER_REGISTRY=${{ env.BUILDER_BASE_IMAGE_REGISTRY }} \
             --build-arg BUILDER_REGISTRY_PATH=${{ env.BUILDER_BASE_IMAGE_REGISTRY_PATH }} \
             --build-arg BUILDER_BASE_IMAGE=${{ env.BUILDER_BASE_IMAGE }} \
             --build-arg BUILDER_BASE_IMAGE_TAG=${{ matrix.builder-base-image-vsn }}-alpine \
             --build-arg MIX_ENV=${{ matrix.build-env }} \
+            --build-arg GEN_PLTS=true \
             --build-arg ELIXIR_VSN=${{ matrix.builder-base-image-vsn }}
           docker container create --name cache ghcr.io/${{ github.repository }}/container-dev-builder:${{ matrix.build-env }}-${{ matrix.builder-base-image-vsn }}-${{ github.sha }}
           docker container cp cache:/opt/app/deps .
@@ -75,7 +76,7 @@ jobs:
         build-env:
           - prod
         base-image-vsn:
-          - 1.14.1
+          - 1.14.2
     steps:
       - uses: actions/checkout@v3
       - name: Set up Docker Buildx

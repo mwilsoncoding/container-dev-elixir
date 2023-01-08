@@ -5,7 +5,7 @@ defmodule ElixirDev.MixProject do
     [
       app: :elixir_dev,
       version: "0.1.0",
-      elixir: System.get_env("ELIXIR_VSN", "1.14.1"),
+      elixir: Application.get_env(__MODULE__, :elixir_vsn),
       start_permanent: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),

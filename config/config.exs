@@ -1,5 +1,7 @@
 import Config
 
+config :elixir_dev, ElixirDev.MixProject, elixir_vsn: System.get_env("ELIXIR_VSN", "1.14.2")
+
 config :elixir_dev, ElixirDev.Application, k8s_probe_port: 9090
 
 # config :elixir_dev,
