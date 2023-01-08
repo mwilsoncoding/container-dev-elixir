@@ -5,4 +5,5 @@ IFS=$'\n\t'
 mix do local.hex --force --if-missing, \
        local.rebar --force --if-missing, \
        deps.get, \
-       deps.update --all
+       deps.update --all, \
+       compile
