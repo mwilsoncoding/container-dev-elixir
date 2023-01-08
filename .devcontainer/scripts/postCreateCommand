@@ -6,4 +6,19 @@ mix do local.hex --force --if-missing, \
        local.rebar --force --if-missing, \
        deps.get, \
        deps.update --all, \
-       compile
+       compile --force
+
+if [ -f '.git/hooks/pre-commit' ]; then
+  echo "Found existing .git/hooks/pre-commit" >&2
+  echo "Delete the existing pre-commit hook or rename it to write the file anew" >&2
+else
+  cat <<'EOF' > .git/hooks/pre-commit
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+mix do format --check-formatted, \
+       credo, \
+       deps.audit
+EOF
+  chmod +x .git/hooks/pre-commit
+fi
