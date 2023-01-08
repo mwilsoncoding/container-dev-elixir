@@ -16,8 +16,6 @@ jobs:
     strategy:
       matrix:
         build-env:
-          - dev
-          - test
           - prod
         builder-base-image-vsn:
           - 1.14.2
@@ -44,7 +42,7 @@ jobs:
             _build
             .hex
             .mix
-            .rebar_cache
+          # .rebar_cache
 
           # Cache based on OS, BUILD_ENV, LANG, LANG_VSN, and hashFiles('**/lang.lock')
           # The default branch should cache the same without the hash for a restore
@@ -68,7 +66,7 @@ jobs:
           docker container cp cache:/opt/app/_build .
           docker container cp cache:/opt/app/.mix .
           docker container cp cache:/opt/app/.hex .
-          docker container cp cache:/opt/app/.cache .
+          # docker container cp cache:/opt/app/.rebar_cache .
   build-publish:
     runs-on: ubuntu-latest
     strategy:
